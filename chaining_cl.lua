@@ -29,30 +29,35 @@ hydra = hydra or {}
 -- @param parent Panel|nil Родительский элемент панели.
 -- @return table proxy Proxy-объект панели, поддерживающий цепочные вызовы методов.
 function hydra.chain(panelName, callback, parent)
-    parent = parent or nil
+    if callback and not isfunction(callback) then
+        parent = callback
+        callback = function() end
+    end
+    
     callback = callback or function() end
-
-    local v = vgui.Create(panelName, parent)
+    
+    local realParent = parent and parent.__vgui or parent
+    local v = vgui.Create(panelName, realParent)
 
     local proxy = {}
+    proxy.__vgui = v
+
     setmetatable(proxy, {
         __index = function(t, key)
             local orig = v[key]
-            if isfunction(orig) then
-                return function(_, ...)
-                    local result = orig(v, ...)
-                        
-                    if result == nil or result == v then
-                        return t
-                    else
-                        return result
-                    end
+            if not isfunction(orig) then return orig end
+
+            return function(_, ...)
+                local result = orig(v, ...)
+
+                if result == nil or result == v then
+                    return t
+                else
+                    return result
                 end
-            else
-                return orig
             end
         end,
-            
+
         __newindex = function(t, key, value)
             v[key] = value
         end
@@ -62,6 +67,7 @@ function hydra.chain(panelName, callback, parent)
 
     return proxy
 end
+
 
 
 
