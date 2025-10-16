@@ -24,19 +24,13 @@ hydra = hydra or {}
 -- :MakePopup()
 
 --- Создает панель с возможностью цепочного вызова методов.
--- @param panelName string Имя панели, например 'DFrame' или 'DButton'.
--- @param callback fun(proxy: table)|Panel|nil Функция инициализации proxy или родительский элемент панели.
--- @param parent Panel|nil Родительский элемент панели, если второй аргумент — callback.
--- @return table proxy Proxy-объект, поддерживающий цепочные вызовы методов.
+-- @param panel string Имя панели
+-- @param callback fun(proxy: table)|nil Функция для настройки proxy-панели.
+-- @param parent Panel|nil Родительский элемент панели.
+-- @return table proxy Proxy-объект панели, поддерживающий цепочные вызовы методов.
 function hydra.chain(panelName, callback, parent)
-    local callback = nil
-
-    if isfunction(callback) then
-        callback = callback
-    else
-        parent = callback
-        callback = function() end
-    end
+    parent = parent or nil
+    callback = callback or function() end
 
     local v = vgui.Create(panelName, parent)
 
@@ -63,5 +57,6 @@ function hydra.chain(panelName, callback, parent)
 
     return proxy
 end
+
 
 
