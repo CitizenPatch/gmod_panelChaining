@@ -14,11 +14,11 @@ hydra = hydra or {}
 --     p:SetSize(300, 200)
 --     p:SetTitle('Пример')
 --     p:MakePopup()
--- end)
+-- end, parent)
 -- 
 -- Или:
 -- 
--- local pnl = hydra.chain('DFrame')
+-- local pnl = hydra.chain('DFrame', parent)
 -- :SetSize(300, 300)
 -- :SetTitle('Пример')
 -- :MakePopup()
@@ -67,6 +67,7 @@ function hydra.chain(panelName, callback, parent)
 
     return proxy
 end
+
 
 
 
