@@ -41,6 +41,7 @@ function hydra.chain(panelName, callback, parent)
             if isfunction(orig) then
                 return function(_, ...)
                     local result = orig(v, ...)
+                        
                     if result == nil or result == v then
                         return t
                     else
@@ -50,6 +51,10 @@ function hydra.chain(panelName, callback, parent)
             else
                 return orig
             end
+        end,
+            
+        __newindex = function(t, key, value)
+            v[key] = value
         end
     })
 
@@ -57,6 +62,7 @@ function hydra.chain(panelName, callback, parent)
 
     return proxy
 end
+
 
 
 
